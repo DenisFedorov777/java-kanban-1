@@ -6,28 +6,30 @@
 Как системы контроля версий помогают команде работать с общим кодом, так и трекеры задач позволяют эффективно организовать совместную работу над задачами. Вам предстоит написать бэкенд для такого трекера. В итоге должна получиться программа, отвечающая за формирование модели данных для этой страницы
 
 ## Реализованные возможности
-- Создание ```manager.add()```:
+- Создание ```add()```:
   - Эпика 
   - Задачи
   - Подзадачи
 - Получение списка:
-  - Задач: ```manager.getListSimpleTask()```
-  - Подзадач: ```manager.getListSubtask()```
-  - Эпиков: ```manager.getListEpic()```
-  - Всех типов задач:```manager.getListOfAllTask()```
-- Получение объекта любой задачи/эпика/подзадачи по ID
-  - ```manager.getObject(ID)```
+  - Задач: ```getListSimpleTask()```
+  - Подзадач: ```getListSubtask()```
+  - Эпиков: ```getListEpic()```
+  - Всех типов задач:```getListOfAllTask()```
+- Получение объекта задачи/эпика/подзадачи по ID
+  - ```getTaskByID(Long id)```
+  - ```getSubtaskByID(Long id)```
+  - ```getEpicByID(Long id)```
 - Получение списка всех подзадач определенного эпика
-  - ```manager.getSubtaskListByEpicID(ID)```
+  - ```getSubtaskListByEpicID(ID)```
 - Удаление задачи/эпика/подзадачи по ID
-  - ```manager.remove(ID)```
+  - ```remove(ID)```
 - Удаление всех задач/подзадач/эпиков по выбранному типу
-  - ```manager.removeAllEpics()```
-  - ```manager.removeAllSimpleTasks()```
-  - ```manager.removeAllSubtasks()```
+  - ```removeAllEpics()```
+  - ```removeAllSimpleTasks()```
+  - ```removeAllSubtasks()```
 - Удаление всех задач всех типов
-  - ```manager.	removeAll()```
+  - ```removeAll()```
 - Обновление информации о задаче/эпике/подзадаче по ID
-  - ```manager.update(epic)```
-  - ```manager.update(simpletask)```
-  - ```manager.update(subtask)```
+  - ```update(epic)```
+  - ```update(simpletask)```
+  - ```update(subtask)```

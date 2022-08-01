@@ -47,10 +47,5 @@ public class Main {
         manager.remove(simpleTask2);
         manager.remove(epic2);
 
-        System.out.println();
-        System.out.println(manager.getListEpic());
-        System.out.println(manager.getListSimpleTask());
-        System.out.println(manager.getListSubtask());
-
     }
 }

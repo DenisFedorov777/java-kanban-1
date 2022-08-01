@@ -3,6 +3,7 @@ package main;
 import main.tasks.Epic;
 import main.tasks.SimpleTask;
 import main.tasks.Subtask;
+import main.tasks.Task;
 
 import java.util.*;
 
@@ -244,25 +245,6 @@ public class Manager {
     }
 
     /**
-     * Получаем список всех задач
-     *
-     * @return список всех задач
-     */
-    public List<Object> getListOfAllTask() {
-        List<Object> list = new ArrayList<>();
-        for (Long key : simpleTasks.keySet()) {
-            list.add(simpleTasks.get(key));
-        }
-        for (Long key : subtasks.keySet()) {
-            list.add(subtasks.get(key));
-        }
-        for (Long key : epics.keySet()) {
-            list.add(epics.get(key));
-        }
-        return list;
-    }
-
-    /**
      * Удаляем все простые таски
      */
     public void removeAllSimpleTasks() {
@@ -310,36 +292,39 @@ public class Manager {
         }
     }
 
-
     /**
-     * Универсальный метод: получаем таск/сабтаск/эпик по уникальному идентификатору
+     * Получение объекта SimpleTask по ID
      *
-     * @param id уникальный айдишник по которому получаем объект
-     * @return успех: получаем таск/сабтаск/эпик, неудача: получаем 'null'
+     * @param id id объекта, который хотим получить
+     * @return объект класса SimpleTask
      */
-    public Object getObject(Long id) {
-        if (simpleTasks.containsKey(id)) {
-            return simpleTasks.get(id);
-        } else if (subtasks.containsKey(id)) {
-            return subtasks.get(id);
-        } else if (epics.containsKey(id)) {
-            return epics.get(id);
-        } else {
-            return null;
-        }
+    public SimpleTask getTaskByID(Long id) {
+        return simpleTasks.get(id);
     }
 
-//    //TODO получение таска по id
-//    public Object getTaskByID(){}
-//
-//    //TODO получение сабтаска по ID
-//    public Object getSubtaskByID(){}
-//
-//    //TODO получение эпика по ID
-//    public Object getEpicByID(){}
+    /**
+     * Получение объекта Subtask по ID
+     *
+     * @param id id объекта, который хотим получить
+     * @return объект класса Subtask
+     */
+    public Subtask getSubtaskByID(Long id) {
+        return subtasks.get(id);
+    }
+
+    /**
+     * Получение объекта Epic по ID
+     *
+     * @param id id объекта, который хотим получить
+     * @return объект класса Epic
+     */
+    public Epic getEpicByID(Long id) {
+        return epics.get(id);
+    }
 
     /**
      * Следующий присваеваемый уникальный ID
+     *
      * @return ID для некст таска
      */
     public Long getNextID() {
