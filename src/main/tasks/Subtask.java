@@ -1,4 +1,4 @@
-package main;
+package main.tasks;
 
 import main.status.StatusEnum;
 
@@ -7,36 +7,25 @@ import main.status.StatusEnum;
  */
 public class Subtask extends Task {
 
-    protected StatusEnum Status;
-    protected Long epicID;
+    private final Long epicID;
 
 
     public Subtask(String name, String description, StatusEnum status, Long epicID) {
-        super(0L, name, description);
-        this.Status = status;
+        super(0L, name, description, status);
         this.epicID = epicID;
     }
 
     public Subtask(Long id, String name, String description, StatusEnum status, Long epicID) {
-        super(id, name, description);
-        this.Status = status;
+        super(id, name, description, status);
         this.epicID = epicID;
     }
 
     public StatusEnum getStatus() {
-        return Status;
-    }
-
-    public void setStatus(StatusEnum status) {
-        Status = status;
+        return status;
     }
 
     public Long getEpicID() {
         return epicID;
-    }
-
-    public void setEpicID(Long epicID) {
-        this.epicID = epicID;
     }
 
     @Override
@@ -46,7 +35,7 @@ public class Subtask extends Task {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", epicID=" + epicID +
-                ", status='" + Status +
+                ", status='" + status +
                 "'}";
     }
 }

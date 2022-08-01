@@ -1,9 +1,10 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import main.tasks.Epic;
+import main.tasks.SimpleTask;
+import main.tasks.Subtask;
+
+import java.util.*;
 
 import static main.status.StatusEnum.DONE;
 import static main.status.StatusEnum.IN_PROGRESS;
@@ -13,11 +14,99 @@ import static main.status.StatusEnum.TODO;
  * Класс для управления задачами
  */
 public class Manager {
-    private Long nextID = 1L;
 
-    private HashMap<Long, SimpleTask> simpleTasks = new HashMap<>();
-    private HashMap<Long, Subtask> subtasks = new HashMap<>();
-    private HashMap<Long, Epic> epics = new HashMap<>();
+
+    private Long nextID;
+
+    private final Map<Long, SimpleTask> simpleTasks;
+    private final Map<Long, Subtask> subtasks;
+    private final Map<Long, Epic> epics;
+
+    public Manager() {
+        this.nextID = nextID = 1L;
+        this.simpleTasks = new HashMap<>();
+        this.subtasks = new HashMap<>();
+        this.epics = new HashMap<>();
+    }
+
+    /**
+     * Обновляем статус эпика, в зависимости от статусов его сабтасков
+     *
+     * @param epicID айдишник эпика, статус которого обновляем
+     */
+    private void updateEpicStatus(Long epicID) {
+
+        Long countOfNEW = 0L;
+        Long countOfDONE = 0L;
+        Long countOfSubtask = (long) epics.get(epicID).getSubtaskIDs().size();
+
+        for (Long subtaskID : epics.get(epicID).getSubtaskIDs()) {
+            if (subtasks.get(subtaskID).getStatus() == TODO) {
+                countOfNEW++;
+            } else if (subtasks.get(subtaskID).getStatus() == DONE) {
+                countOfDONE++;
+            }
+        }
+
+        if (countOfNEW.equals(countOfSubtask) || (countOfSubtask == 0)) {
+            Epic epic = epics.get(epicID);
+            epic.setStatus(TODO);
+            epics.put(epicID, epic);
+        } else if (countOfDONE.equals(countOfSubtask)) {
+            Epic epic = epics.get(epicID);
+            epic.setStatus(DONE);
+            epics.put(epicID, epic);
+        } else {
+            Epic epic = epics.get(epicID);
+            epic.setStatus(IN_PROGRESS);
+            epics.put(epicID, epic);
+        }
+    }
+
+    /**
+     * Удаляем сабтаск и актуализируем статус эпика
+     *
+     * @param id айдишник сабтаска, которого удаляем
+     */
+    private void removeSubtask(Long id) {
+        subtasks.remove(id);
+    }
+
+    /**
+     * Удаляем эпик со всеми его сабтасками
+     *
+     * @param id айдишник эпика, который удаляем
+     */
+    private void removeEpic(Long id) {
+
+        for (Long key : subtasks.keySet()) {
+            if (Objects.equals(subtasks.get(key).getEpicID(), id)) {
+                subtasks.remove(key);
+                if (subtasks.size() <= 1) {
+                    subtasks.clear();
+                    break;
+                }
+            }
+        }
+        epics.remove(id);
+    }
+
+    /**
+     * Обновление списка айдишников сабтасков в эпике
+     *
+     * @param epic эпик, айдишники сабтасков которого обновляем
+     * @return обновленный список айдишников сабтасков эпика
+     */
+    private List<Long> updateSubtasksInEpic(Epic epic) {
+        List<Long> lisOfSubtaskIDs = new ArrayList<>();
+        for (Long subtaskID : epic.getSubtaskIDs()) {
+            Subtask subtask = subtasks.get(subtaskID);
+            lisOfSubtaskIDs.add(subtask.getId());
+        }
+        epic.setSubtaskIDs(lisOfSubtaskIDs);
+
+        return epic.getSubtaskIDs();
+    }
 
     /**
      * Получаем список всех простых тасков
@@ -132,7 +221,7 @@ public class Manager {
      */
     public void update(Epic epic) {
         Epic oldEpic = epics.get(epic.getId());
-        for (Long idSubtask : oldEpic.subtaskIDs) {
+        for (Long idSubtask : oldEpic.getSubtaskIDs()) {
             remove(idSubtask);
         }
 
@@ -141,7 +230,21 @@ public class Manager {
     }
 
     /**
-     * Получаем список всех задач всех типов
+     * Метод получения списка задач по эпику (по id эпика)
+     *
+     * @param id айдишник эпика, список подзадач которого хотим получить
+     * @return готовый список с сабтасками
+     */
+    public List<Subtask> getSubtaskListByEpicID(Long id) {
+        List<Subtask> currentList = new ArrayList<>();
+        for (Long currentSubtask : epics.get(id).getSubtaskIDs()) {
+            currentList.add(subtasks.get(currentSubtask));
+        }
+        return currentList;
+    }
+
+    /**
+     * Получаем список всех задач
      *
      * @return список всех задач
      */
@@ -178,6 +281,7 @@ public class Manager {
      */
     public void removeAllEpics() {
         epics.clear();
+        subtasks.clear();
     }
 
     /**
@@ -206,84 +310,9 @@ public class Manager {
         }
     }
 
-    /**
-     * Удаляем сабтаск и актуализируем статус эпика
-     *
-     * @param id айдишник сабтаска, которого удаляем
-     */
-    private void removeSubtask(Long id) {
-        subtasks.remove(id);
-    }
 
     /**
-     * Удаляем эпик со всеми его сабтасками
-     *
-     * @param id айдишник эпика, который удаляем
-     */
-    private void removeEpic(Long id) {
-
-        for (Long key : subtasks.keySet()) {
-            if (Objects.equals(subtasks.get(key).getEpicID(), id)) {
-                subtasks.remove(key);
-                if (subtasks.size() <= 1) {
-                    subtasks.clear();
-                    break;
-                }
-            }
-        }
-        epics.remove(id);
-    }
-
-    /**
-     * Обновляем статус эпика, в зависимости от статусов его сабтасков
-     *
-     * @param epicID айдишник эпика, статус которого обновляем
-     */
-    private void updateEpicStatus(Long epicID) {
-
-        Long countOfNEW = 0L;
-        Long countOfDONE = 0L;
-        Long countOfSubtask = (long) epics.get(epicID).subtaskIDs.size();
-
-        for (Long subtaskID : epics.get(epicID).subtaskIDs) {
-            if (subtasks.get(subtaskID).getStatus() == TODO) {
-                countOfNEW++;
-            } else if (subtasks.get(subtaskID).getStatus() == DONE) {
-                countOfDONE++;
-            }
-        }
-
-        if (countOfNEW.equals(countOfSubtask) || (countOfSubtask == 0)) {
-            Epic epic = epics.get(epicID);
-            epic.setStatus(TODO);
-            epics.put(epicID, epic);
-        } else if (countOfDONE.equals(countOfSubtask)) {
-            Epic epic = epics.get(epicID);
-            epic.setStatus(DONE);
-            epics.put(epicID, epic);
-        } else {
-            Epic epic = epics.get(epicID);
-            epic.setStatus(IN_PROGRESS);
-            epics.put(epicID, epic);
-        }
-    }
-
-    /**
-     * Получаем список всех подзадач определенного эпика
-     *
-     * @param id айдишник эпика, список подзадач которого хотим получить
-     * @return готовый список с сабтасками
-     */
-    public List<Subtask> getSubtaskListByEpicID(Long id) {
-        List<Subtask> currentList = new ArrayList<>();
-        for (Long currentSubtask : epics.get(id).subtaskIDs) {
-            currentList.add(subtasks.get(currentSubtask));
-        }
-        return currentList;
-    }
-
-    /**
-     * Получаем таск/сабтаск/эпик по уникальному идентификатору
+     * Универсальный метод: получаем таск/сабтаск/эпик по уникальному идентификатору
      *
      * @param id уникальный айдишник по которому получаем объект
      * @return успех: получаем таск/сабтаск/эпик, неудача: получаем 'null'
@@ -300,21 +329,27 @@ public class Manager {
         }
     }
 
-    /**
-     * Обновление списка айдишников сабтасков в эпике
-     *
-     * @param epic эпик, айдишники сабтасков которого обновляем
-     * @return обновленный список айдишников сабтасков эпика
-     */
-    private List<Long> updateSubtasksInEpic(Epic epic) {
-        List<Long> lisOfSubtaskIDs = new ArrayList<>();
-        for (Long subtaskID : epic.getSubtaskIDs()) {
-            Subtask subtask = subtasks.get(subtaskID);
-            lisOfSubtaskIDs.add(subtask.getId());
-        }
-        epic.setSubtaskIDs(lisOfSubtaskIDs);
+//    //TODO получение таска по id
+//    public Object getTaskByID(){}
+//
+//    //TODO получение сабтаска по ID
+//    public Object getSubtaskByID(){}
+//
+//    //TODO получение эпика по ID
+//    public Object getEpicByID(){}
 
-        return epic.subtaskIDs;
+    /**
+     * Следующий присваеваемый уникальный ID
+     * @return ID для некст таска
+     */
+    public Long getNextID() {
+        return nextID;
     }
 
+    /**
+     * Выбираем с какого номера будут выдаваться уникальные ID
+     */
+    public void setNextID(Long nextID) {
+        this.nextID = nextID;
+    }
 }

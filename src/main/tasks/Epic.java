@@ -1,4 +1,6 @@
-package main;
+package main.tasks;
+
+import main.status.StatusEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +10,15 @@ import java.util.List;
  */
 public class Epic extends Task {
 
-    private Enum status;
-    protected List<Long> subtaskIDs; //список айдишников сабтасков
-
+    private List<Long> subtaskIDs; //список айдишников сабтасков
 
     public Epic(String name, String description) {
         super(0L, name, description);
+        subtaskIDs = new ArrayList<>();
+    }
+
+    public Epic(Long id, String name, String description, StatusEnum status) {
+        super(id, name, description, status);
         subtaskIDs = new ArrayList<>();
     }
 
@@ -22,9 +27,7 @@ public class Epic extends Task {
         subtaskIDs = new ArrayList<>();
     }
 
-    public void addSubtask(Long subtaskID) {
-        this.subtaskIDs.add(subtaskID);
-    }
+
 
     public List<Long> getSubtaskIDs() {
         return subtaskIDs;
@@ -34,7 +37,7 @@ public class Epic extends Task {
         this.subtaskIDs = subtaskIDs;
     }
 
-    public void setStatus(Enum status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 

@@ -1,4 +1,6 @@
-package main;
+package main.tasks;
+
+import main.status.StatusEnum;
 
 /**
  * Класс - родитель, описывает универсальный объект "задача"
@@ -7,6 +9,14 @@ public class Task {
     protected Long id;
     protected String name;
     protected String description;
+    protected StatusEnum status;
+
+    public Task(Long id, String name, String description, StatusEnum status) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
 
     public Task(Long id, String name, String description) {
         this.id = id;

@@ -1,4 +1,4 @@
-package main;
+package main.tasks;
 
 import main.status.StatusEnum;
 
@@ -6,18 +6,15 @@ import main.status.StatusEnum;
  * Класс представляет собой отдельно стоящую задачу
  */
 public class SimpleTask extends Task {
-    protected StatusEnum Status;
 
 
     public SimpleTask(String name, String description, StatusEnum status) {
-        super(0L, name, description);
-        this.Status = status;
+        super(0L, name, description, status);
     }
 
 
     public SimpleTask(Long id, String name, String description, StatusEnum status) {
-        super(id, name, description);
-        this.Status = status;
+        super(id, name, description, status);
     }
 
     @Override
@@ -26,7 +23,7 @@ public class SimpleTask extends Task {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + "'" +
-                ", status='" + Status +
+                ", status='" + status +
                 "'}";
     }
 }
