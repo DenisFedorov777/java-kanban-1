@@ -37,18 +37,14 @@ public class Epic extends Task {
         this.subtaskIDs = subtaskIDs;
     }
 
-    public void setStatus(StatusEnum status) {
-        this.status = status;
-    }
-
     @Override
     public String toString() {
         return "Epic{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + "'" +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + "'" +
                 ", subtaskIDs=" + subtaskIDs +
-                ", status='" + status + "'" +
+                ", status='" + getStatus() + "'" +
                 '}';
     }
 

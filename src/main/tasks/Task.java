@@ -6,10 +6,10 @@ import main.status.StatusEnum;
  * Класс - родитель, описывает универсальный объект "задача"
  */
 public class Task {
-    protected Long id;
-    protected String name;
-    protected String description;
-    protected StatusEnum status;
+    private Long id;
+    private String name;
+    private String description;
+    private StatusEnum status;
 
     public Task(Long id, String name, String description, StatusEnum status) {
         this.id = id;
@@ -46,5 +46,13 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setStatus(StatusEnum status) {
+        this.status = status;
+    }
+
+    public StatusEnum getStatus() {
+        return status;
     }
 }

@@ -231,20 +231,6 @@ public class Manager {
     }
 
     /**
-     * Метод получения списка задач по эпику (по id эпика)
-     *
-     * @param id айдишник эпика, список подзадач которого хотим получить
-     * @return готовый список с сабтасками
-     */
-    public List<Subtask> getSubtaskListByEpicID(Long id) {
-        List<Subtask> currentList = new ArrayList<>();
-        for (Long currentSubtask : epics.get(id).getSubtaskIDs()) {
-            currentList.add(subtasks.get(currentSubtask));
-        }
-        return currentList;
-    }
-
-    /**
      * Удаляем все простые таски
      */
     public void removeAllSimpleTasks() {
@@ -290,6 +276,20 @@ public class Manager {
         } else {
             System.out.println("Нет такого id");
         }
+    }
+
+    /**
+     * Метод получения списка задач по эпику (по id эпика)
+     *
+     * @param id айдишник эпика, список подзадач которого хотим получить
+     * @return готовый список с сабтасками
+     */
+    public List<Subtask> getSubtaskListByEpicID(Long id) {
+        List<Subtask> currentList = new ArrayList<>();
+        for (Long currentSubtask : epics.get(id).getSubtaskIDs()) {
+            currentList.add(subtasks.get(currentSubtask));
+        }
+        return currentList;
     }
 
     /**

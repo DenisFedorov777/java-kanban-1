@@ -20,10 +20,10 @@ public class SimpleTask extends Task {
     @Override
     public String toString() {
         return "SimpleTask{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + "'" +
-                ", status='" + status +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + "'" +
+                ", status='" + getStatus() +
                 "'}";
     }
 }

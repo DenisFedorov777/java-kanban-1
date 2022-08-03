@@ -20,10 +20,6 @@ public class Subtask extends Task {
         this.epicID = epicID;
     }
 
-    public StatusEnum getStatus() {
-        return status;
-    }
-
     public Long getEpicID() {
         return epicID;
     }
@@ -31,11 +27,11 @@ public class Subtask extends Task {
     @Override
     public String toString() {
         return "Subtask{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
                 ", epicID=" + epicID +
-                ", status='" + status +
+                ", status='" + getStatus() +
                 "'}";
     }
 }
