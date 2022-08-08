@@ -1,8 +1,9 @@
-package main;
+package main.managers;
 
 import main.tasks.Epic;
 import main.tasks.SimpleTask;
 import main.tasks.Subtask;
+import main.tasks.Task;
 
 import java.util.*;
 
@@ -10,17 +11,18 @@ import static main.status.StatusEnum.DONE;
 import static main.status.StatusEnum.IN_PROGRESS;
 import static main.status.StatusEnum.TODO;
 
-/**
- * Класс для управления задачами
- */
-public class InMemoryTaskManager implements TaskManager{
 
+public class InMemoryTaskManager implements TaskManager {
+
+    private final Integer HISTORY_MAX_SIZE = 10;
 
     private Long nextID;
 
     private final Map<Long, SimpleTask> simpleTasks;
     private final Map<Long, Subtask> subtasks;
     private final Map<Long, Epic> epics;
+
+    private final List<Task> historyList = new ArrayList<>();
 
 
     public InMemoryTaskManager() {
@@ -30,11 +32,7 @@ public class InMemoryTaskManager implements TaskManager{
         this.epics = new HashMap<>();
     }
 
-    /**
-     * Обновляем статус эпика, в зависимости от статусов его сабтасков
-     *
-     * @param epicID айдишник эпика, статус которого обновляем
-     */
+
     @Override
     public void updateEpicStatus(Long epicID) {
 
@@ -65,21 +63,13 @@ public class InMemoryTaskManager implements TaskManager{
         }
     }
 
-    /**
-     * Удаляем сабтаск и актуализируем статус эпика
-     *
-     * @param id айдишник сабтаска, которого удаляем
-     */
+
     @Override
     public void removeSubtask(Long id) {
         subtasks.remove(id);
     }
 
-    /**
-     * Удаляем эпик со всеми его сабтасками
-     *
-     * @param id айдишник эпика, который удаляем
-     */
+
     @Override
     public void removeEpic(Long id) {
 
@@ -95,12 +85,7 @@ public class InMemoryTaskManager implements TaskManager{
         epics.remove(id);
     }
 
-    /**
-     * Обновление списка айдишников сабтасков в эпике
-     *
-     * @param epic эпик, айдишники сабтасков которого обновляем
-     * @return обновленный список айдишников сабтасков эпика
-     */
+
     @Override
     public List<Long> updateSubtasksInEpic(Epic epic) {
         List<Long> lisOfSubtaskIDs = new ArrayList<>();
@@ -113,11 +98,7 @@ public class InMemoryTaskManager implements TaskManager{
         return epic.getSubtaskIDs();
     }
 
-    /**
-     * Получаем список всех простых тасков
-     *
-     * @return список всех тасков
-     */
+
     @Override
     public List<SimpleTask> getListSimpleTask() {
         List<SimpleTask> list = new ArrayList<>();
@@ -127,11 +108,7 @@ public class InMemoryTaskManager implements TaskManager{
         return list;
     }
 
-    /**
-     * Получаем список всех сабтасков
-     *
-     * @return список всех сабтасков
-     */
+
     @Override
     public List<Subtask> getListSubtask() {
         List<Subtask> list = new ArrayList<>();
@@ -141,11 +118,7 @@ public class InMemoryTaskManager implements TaskManager{
         return list;
     }
 
-    /**
-     * Получаем список всех эпиков
-     *
-     * @return список всех эпиков
-     */
+
     @Override
     public List<Epic> getListEpic() {
         List<Epic> list = new ArrayList<>();
@@ -156,12 +129,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
 
-    /**
-     * Добавляем обычный таск
-     *
-     * @param task новый таск
-     * @return айдишник нового таска
-     */
+
     @Override
     public Long add(SimpleTask task) {
         task.setId(nextID++);
@@ -169,12 +137,7 @@ public class InMemoryTaskManager implements TaskManager{
         return nextID - 1;
     }
 
-    /**
-     * Добавляем новый сабтаск
-     *
-     * @param task новый сабтаск
-     * @return айдишник нового сабтаска
-     */
+
     @Override
     public Long add(Subtask task) {
         task.setId(nextID++);
@@ -187,12 +150,7 @@ public class InMemoryTaskManager implements TaskManager{
         return task.getId();
     }
 
-    /**
-     * Добавляем новый эпик
-     *
-     * @param epic новый эпик
-     * @return айдишник нового эпика
-     */
+
     @Override
     public Long add(Epic epic) {
         epic.setId(nextID++);
@@ -203,21 +161,13 @@ public class InMemoryTaskManager implements TaskManager{
         return epic.getId();
     }
 
-    /**
-     * Обновляем старый таск
-     *
-     * @param task новый таск
-     */
+
     @Override
     public void update(SimpleTask task) {
         simpleTasks.put(task.getId(), task);
     }
 
-    /**
-     * Обновляем старый сабтаск
-     *
-     * @param subtask новый сабтаск
-     */
+
     @Override
     public void update(Subtask subtask) {
 
@@ -227,11 +177,7 @@ public class InMemoryTaskManager implements TaskManager{
         updateEpicStatus(subtask.getEpicID());
     }
 
-    /**
-     * Обновляем старый эпик
-     *
-     * @param epic эпик на замену старого
-     */
+
     @Override
     public void update(Epic epic) {
         Epic oldEpic = epics.get(epic.getId());
@@ -243,34 +189,26 @@ public class InMemoryTaskManager implements TaskManager{
         updateEpicStatus(epic.getId());
     }
 
-    /**
-     * Удаляем все простые таски
-     */
+
     @Override
     public void removeAllSimpleTasks() {
         simpleTasks.clear();
     }
 
-    /**
-     * Удаляем все сабтаски
-     */
+
     @Override
     public void removeAllSubtasks() {
         subtasks.clear();
     }
 
-    /**
-     * Удаляем все эпики
-     */
+
     @Override
     public void removeAllEpics() {
         epics.clear();
         subtasks.clear();
     }
 
-    /**
-     * Удаляем все задачи
-     */
+
     @Override
     public void removeAll() {
         simpleTasks.clear();
@@ -278,11 +216,7 @@ public class InMemoryTaskManager implements TaskManager{
         epics.clear();
     }
 
-    /**
-     * Удаляем таск/сабтаск/эпик по идентификатору
-     *
-     * @param id айдишник, по которому удаляем
-     */
+
     @Override
     public void remove(Long id) {
         if (simpleTasks.containsKey(id)) {
@@ -296,12 +230,7 @@ public class InMemoryTaskManager implements TaskManager{
         }
     }
 
-    /**
-     * Метод получения списка задач по эпику (по id эпика)
-     *
-     * @param id айдишник эпика, список подзадач которого хотим получить
-     * @return готовый список с сабтасками
-     */
+
     @Override
     public List<Subtask> getSubtaskListByEpicID(Long id) {
         List<Subtask> currentList = new ArrayList<>();
@@ -311,54 +240,55 @@ public class InMemoryTaskManager implements TaskManager{
         return currentList;
     }
 
-    /**
-     * Получение объекта SimpleTask по ID
-     *
-     * @param id id объекта, который хотим получить
-     * @return объект класса SimpleTask
-     */
+
     @Override
     public SimpleTask getTaskByID(Long id) {
+        if (historyList.size() < HISTORY_MAX_SIZE){
+            historyList.add(simpleTasks.get(id));
+        } else {
+            historyList.remove(0);
+            historyList.add(simpleTasks.get(id));
+        }
         return simpleTasks.get(id);
     }
 
-    /**
-     * Получение объекта Subtask по ID
-     *
-     * @param id id объекта, который хотим получить
-     * @return объект класса Subtask
-     */
+
     @Override
     public Subtask getSubtaskByID(Long id) {
+        if (historyList.size() < HISTORY_MAX_SIZE){
+            historyList.add(subtasks.get(id));
+        } else {
+            historyList.remove(0);
+            historyList.add(subtasks.get(id));
+        }
         return subtasks.get(id);
     }
 
-    /**
-     * Получение объекта Epic по ID
-     *
-     * @param id id объекта, который хотим получить
-     * @return объект класса Epic
-     */
+
     @Override
     public Epic getEpicByID(Long id) {
+        if (historyList.size() < HISTORY_MAX_SIZE){
+            historyList.add(epics.get(id));
+        } else {
+            historyList.remove(0);
+            historyList.add(epics.get(id));
+        }
         return epics.get(id);
     }
 
-    /**
-     * Следующий присваеваемый уникальный ID
-     *
-     * @return ID для некст таска
-     */
     @Override
     public Long getNextID() {
         return nextID;
     }
 
-    /**
-     * Выбираем с какого номера будут выдаваться уникальные ID
-     */
+
     @Override
     public void setNextID(Long nextID) {
         this.nextID = nextID;
+    }
+
+    @Override
+    public List<Task> getHistory(){
+        return historyList;
     }
 }

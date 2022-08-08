@@ -1,5 +1,6 @@
 package main;
 
+import main.managers.InMemoryTaskManager;
 import main.tasks.Epic;
 import main.tasks.SimpleTask;
 import main.tasks.Subtask;
@@ -27,6 +28,19 @@ public class Main {
         Long epic2 = manager.add(new Epic("Второй эпик", ""));
         Long subtask3 = manager.add(new Subtask("Первый сабтаск второго эпика","", TODO,epic2));
 
+        manager.getTaskByID(1L);
+        manager.getEpicByID(3L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+        manager.getSubtaskByID(4L);
+
+
         //Выводим все задачи
         System.out.println(manager.getListEpic());
         System.out.println(manager.getListSimpleTask());
@@ -46,6 +60,10 @@ public class Main {
         //Удаляем вторую задачу и эпик
         manager.remove(simpleTask2);
         manager.remove(epic2);
+
+        //Выводим историю поиска
+        System.out.println();
+        System.out.println(manager.getHistory());
 
     }
 }
