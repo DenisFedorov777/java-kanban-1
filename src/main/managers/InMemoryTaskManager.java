@@ -3,7 +3,6 @@ package main.managers;
 import main.tasks.Epic;
 import main.tasks.SimpleTask;
 import main.tasks.Subtask;
-import main.tasks.Task;
 
 import java.util.*;
 
@@ -14,16 +13,13 @@ import static main.status.StatusEnum.TODO;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final Integer HISTORY_MAX_SIZE = 10;
-
     private Long nextID;
 
     private final Map<Long, SimpleTask> simpleTasks;
     private final Map<Long, Subtask> subtasks;
     private final Map<Long, Epic> epics;
 
-    private final List<Task> historyList = new ArrayList<>();
-
+    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     public InMemoryTaskManager() {
         this.nextID = nextID = 1L;
@@ -127,7 +123,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return list;
     }
-
 
 
     @Override
@@ -243,36 +238,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SimpleTask getTaskByID(Long id) {
-        if (historyList.size() < HISTORY_MAX_SIZE){
-            historyList.add(simpleTasks.get(id));
-        } else {
-            historyList.remove(0);
-            historyList.add(simpleTasks.get(id));
-        }
+        historyManager.add(simpleTasks.get(id));
         return simpleTasks.get(id);
     }
 
 
     @Override
     public Subtask getSubtaskByID(Long id) {
-        if (historyList.size() < HISTORY_MAX_SIZE){
-            historyList.add(subtasks.get(id));
-        } else {
-            historyList.remove(0);
-            historyList.add(subtasks.get(id));
-        }
+        historyManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
 
     @Override
     public Epic getEpicByID(Long id) {
-        if (historyList.size() < HISTORY_MAX_SIZE){
-            historyList.add(epics.get(id));
-        } else {
-            historyList.remove(0);
-            historyList.add(epics.get(id));
-        }
+        historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
@@ -287,8 +267,4 @@ public class InMemoryTaskManager implements TaskManager {
         this.nextID = nextID;
     }
 
-    @Override
-    public List<Task> getHistory(){
-        return historyList;
-    }
 }

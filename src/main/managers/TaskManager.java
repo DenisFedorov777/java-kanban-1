@@ -3,7 +3,6 @@ package main.managers;
 import main.tasks.Epic;
 import main.tasks.SimpleTask;
 import main.tasks.Subtask;
-import main.tasks.Task;
 
 import java.util.*;
 
@@ -175,12 +174,5 @@ public interface TaskManager {
      * Выбираем с какого номера будут выдаваться уникальные ID
      */
     void setNextID(Long nextID);
-
-    /**
-     * История просмотров задач
-     *
-     * @return Список просмотренных задач
-     */
-    List<Task> getHistory();
 
 }
