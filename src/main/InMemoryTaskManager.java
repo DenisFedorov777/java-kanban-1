@@ -3,7 +3,6 @@ package main;
 import main.tasks.Epic;
 import main.tasks.SimpleTask;
 import main.tasks.Subtask;
-import main.tasks.Task;
 
 import java.util.*;
 
@@ -14,7 +13,7 @@ import static main.status.StatusEnum.TODO;
 /**
  * Класс для управления задачами
  */
-public class Manager {
+public class InMemoryTaskManager implements TaskManager{
 
 
     private Long nextID;
@@ -23,7 +22,8 @@ public class Manager {
     private final Map<Long, Subtask> subtasks;
     private final Map<Long, Epic> epics;
 
-    public Manager() {
+
+    public InMemoryTaskManager() {
         this.nextID = nextID = 1L;
         this.simpleTasks = new HashMap<>();
         this.subtasks = new HashMap<>();
@@ -35,7 +35,8 @@ public class Manager {
      *
      * @param epicID айдишник эпика, статус которого обновляем
      */
-    private void updateEpicStatus(Long epicID) {
+    @Override
+    public void updateEpicStatus(Long epicID) {
 
         Long countOfNEW = 0L;
         Long countOfDONE = 0L;
@@ -69,7 +70,8 @@ public class Manager {
      *
      * @param id айдишник сабтаска, которого удаляем
      */
-    private void removeSubtask(Long id) {
+    @Override
+    public void removeSubtask(Long id) {
         subtasks.remove(id);
     }
 
@@ -78,7 +80,8 @@ public class Manager {
      *
      * @param id айдишник эпика, который удаляем
      */
-    private void removeEpic(Long id) {
+    @Override
+    public void removeEpic(Long id) {
 
         for (Long key : subtasks.keySet()) {
             if (Objects.equals(subtasks.get(key).getEpicID(), id)) {
@@ -98,7 +101,8 @@ public class Manager {
      * @param epic эпик, айдишники сабтасков которого обновляем
      * @return обновленный список айдишников сабтасков эпика
      */
-    private List<Long> updateSubtasksInEpic(Epic epic) {
+    @Override
+    public List<Long> updateSubtasksInEpic(Epic epic) {
         List<Long> lisOfSubtaskIDs = new ArrayList<>();
         for (Long subtaskID : epic.getSubtaskIDs()) {
             Subtask subtask = subtasks.get(subtaskID);
@@ -114,6 +118,7 @@ public class Manager {
      *
      * @return список всех тасков
      */
+    @Override
     public List<SimpleTask> getListSimpleTask() {
         List<SimpleTask> list = new ArrayList<>();
         for (Long task : simpleTasks.keySet()) {
@@ -127,6 +132,7 @@ public class Manager {
      *
      * @return список всех сабтасков
      */
+    @Override
     public List<Subtask> getListSubtask() {
         List<Subtask> list = new ArrayList<>();
         for (Long task : subtasks.keySet()) {
@@ -140,6 +146,7 @@ public class Manager {
      *
      * @return список всех эпиков
      */
+    @Override
     public List<Epic> getListEpic() {
         List<Epic> list = new ArrayList<>();
         for (Long task : epics.keySet()) {
@@ -155,6 +162,7 @@ public class Manager {
      * @param task новый таск
      * @return айдишник нового таска
      */
+    @Override
     public Long add(SimpleTask task) {
         task.setId(nextID++);
         simpleTasks.put(task.getId(), task);
@@ -167,6 +175,7 @@ public class Manager {
      * @param task новый сабтаск
      * @return айдишник нового сабтаска
      */
+    @Override
     public Long add(Subtask task) {
         task.setId(nextID++);
         subtasks.put(task.getId(), task);
@@ -184,6 +193,7 @@ public class Manager {
      * @param epic новый эпик
      * @return айдишник нового эпика
      */
+    @Override
     public Long add(Epic epic) {
         epic.setId(nextID++);
         epic.setStatus(TODO);
@@ -198,6 +208,7 @@ public class Manager {
      *
      * @param task новый таск
      */
+    @Override
     public void update(SimpleTask task) {
         simpleTasks.put(task.getId(), task);
     }
@@ -207,6 +218,7 @@ public class Manager {
      *
      * @param subtask новый сабтаск
      */
+    @Override
     public void update(Subtask subtask) {
 
         subtasks.put(subtask.getId(), subtask);
@@ -220,6 +232,7 @@ public class Manager {
      *
      * @param epic эпик на замену старого
      */
+    @Override
     public void update(Epic epic) {
         Epic oldEpic = epics.get(epic.getId());
         for (Long idSubtask : oldEpic.getSubtaskIDs()) {
@@ -233,6 +246,7 @@ public class Manager {
     /**
      * Удаляем все простые таски
      */
+    @Override
     public void removeAllSimpleTasks() {
         simpleTasks.clear();
     }
@@ -240,6 +254,7 @@ public class Manager {
     /**
      * Удаляем все сабтаски
      */
+    @Override
     public void removeAllSubtasks() {
         subtasks.clear();
     }
@@ -247,6 +262,7 @@ public class Manager {
     /**
      * Удаляем все эпики
      */
+    @Override
     public void removeAllEpics() {
         epics.clear();
         subtasks.clear();
@@ -255,6 +271,7 @@ public class Manager {
     /**
      * Удаляем все задачи
      */
+    @Override
     public void removeAll() {
         simpleTasks.clear();
         subtasks.clear();
@@ -266,6 +283,7 @@ public class Manager {
      *
      * @param id айдишник, по которому удаляем
      */
+    @Override
     public void remove(Long id) {
         if (simpleTasks.containsKey(id)) {
             simpleTasks.remove(id);
@@ -284,6 +302,7 @@ public class Manager {
      * @param id айдишник эпика, список подзадач которого хотим получить
      * @return готовый список с сабтасками
      */
+    @Override
     public List<Subtask> getSubtaskListByEpicID(Long id) {
         List<Subtask> currentList = new ArrayList<>();
         for (Long currentSubtask : epics.get(id).getSubtaskIDs()) {
@@ -298,6 +317,7 @@ public class Manager {
      * @param id id объекта, который хотим получить
      * @return объект класса SimpleTask
      */
+    @Override
     public SimpleTask getTaskByID(Long id) {
         return simpleTasks.get(id);
     }
@@ -308,6 +328,7 @@ public class Manager {
      * @param id id объекта, который хотим получить
      * @return объект класса Subtask
      */
+    @Override
     public Subtask getSubtaskByID(Long id) {
         return subtasks.get(id);
     }
@@ -318,6 +339,7 @@ public class Manager {
      * @param id id объекта, который хотим получить
      * @return объект класса Epic
      */
+    @Override
     public Epic getEpicByID(Long id) {
         return epics.get(id);
     }
@@ -327,6 +349,7 @@ public class Manager {
      *
      * @return ID для некст таска
      */
+    @Override
     public Long getNextID() {
         return nextID;
     }
@@ -334,6 +357,7 @@ public class Manager {
     /**
      * Выбираем с какого номера будут выдаваться уникальные ID
      */
+    @Override
     public void setNextID(Long nextID) {
         this.nextID = nextID;
     }

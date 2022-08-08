@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Manager manager = new Manager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         //Создаем две таски
         Long simpleTask1 = manager.add(new SimpleTask("Первый обычный таск","", TODO));
