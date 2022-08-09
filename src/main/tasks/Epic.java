@@ -9,7 +9,6 @@ import java.util.List;
  * Класс представляет собой эпик, состоящий из подзадач
  */
 public class Epic extends Task {
-
     private List<Long> subtaskIDs; //список айдишников сабтасков
 
     public Epic(String name, String description) {
@@ -26,7 +25,6 @@ public class Epic extends Task {
         super(id, name, description);
         subtaskIDs = new ArrayList<>();
     }
-
 
 
     public List<Long> getSubtaskIDs() {
@@ -47,6 +45,4 @@ public class Epic extends Task {
                 ", status='" + getStatus() + "'" +
                 '}';
     }
-
-
 }

@@ -6,9 +6,7 @@ import main.status.StatusEnum;
  * Класс описывающий объект "подзадача" (сабтаск)
  */
 public class Subtask extends Task {
-
     private final Long epicID;
-
 
     public Subtask(String name, String description, StatusEnum status, Long epicID) {
         super(0L, name, description, status);
