@@ -10,27 +10,27 @@ import static main.status.StatusEnum.DONE;
 import static main.status.StatusEnum.IN_PROGRESS;
 import static main.status.StatusEnum.TODO;
 
-
 public class InMemoryTaskManager implements TaskManager {
-
     private Long nextID;
-
     private final Map<Long, SimpleTask> simpleTasks;
     private final Map<Long, Subtask> subtasks;
     private final Map<Long, Epic> epics;
-
-    InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+    InMemoryHistoryManager historyManager;
 
     public InMemoryTaskManager() {
         this.nextID = nextID = 1L;
         this.simpleTasks = new HashMap<>();
         this.subtasks = new HashMap<>();
         this.epics = new HashMap<>();
+        this.historyManager = new InMemoryHistoryManager();
     }
 
-
-    @Override
-    public void updateEpicStatus(Long epicID) {
+    /**
+     * Обновляем статус эпика, в зависимости от статусов его сабтасков
+     *
+     * @param epicID айдишник эпика, статус которого обновляем
+     */
+    private void updateEpicStatus(Long epicID) {
 
         Long countOfNEW = 0L;
         Long countOfDONE = 0L;
@@ -59,14 +59,20 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-
-    @Override
+    /**
+     * Удаляем сабтаск и актуализируем статус эпика
+     *
+     * @param id айдишник сабтаска, которого удаляем
+     */
     public void removeSubtask(Long id) {
         subtasks.remove(id);
     }
 
-
-    @Override
+    /**
+     * Удаляем эпик со всеми его сабтасками
+     *
+     * @param id айдишник эпика, который удаляем
+     */
     public void removeEpic(Long id) {
 
         for (Long key : subtasks.keySet()) {
@@ -81,7 +87,6 @@ public class InMemoryTaskManager implements TaskManager {
         epics.remove(id);
     }
 
-
     @Override
     public List<Long> updateSubtasksInEpic(Epic epic) {
         List<Long> lisOfSubtaskIDs = new ArrayList<>();
@@ -94,7 +99,6 @@ public class InMemoryTaskManager implements TaskManager {
         return epic.getSubtaskIDs();
     }
 
-
     @Override
     public List<SimpleTask> getListSimpleTask() {
         List<SimpleTask> list = new ArrayList<>();
@@ -103,7 +107,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return list;
     }
-
 
     @Override
     public List<Subtask> getListSubtask() {
@@ -114,7 +117,6 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
 
-
     @Override
     public List<Epic> getListEpic() {
         List<Epic> list = new ArrayList<>();
@@ -124,14 +126,12 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
 
-
     @Override
     public Long add(SimpleTask task) {
         task.setId(nextID++);
         simpleTasks.put(task.getId(), task);
         return nextID - 1;
     }
-
 
     @Override
     public Long add(Subtask task) {
@@ -145,7 +145,6 @@ public class InMemoryTaskManager implements TaskManager {
         return task.getId();
     }
 
-
     @Override
     public Long add(Epic epic) {
         epic.setId(nextID++);
@@ -156,12 +155,10 @@ public class InMemoryTaskManager implements TaskManager {
         return epic.getId();
     }
 
-
     @Override
     public void update(SimpleTask task) {
         simpleTasks.put(task.getId(), task);
     }
-
 
     @Override
     public void update(Subtask subtask) {
@@ -171,7 +168,6 @@ public class InMemoryTaskManager implements TaskManager {
         updateSubtasksInEpic(epic);
         updateEpicStatus(subtask.getEpicID());
     }
-
 
     @Override
     public void update(Epic epic) {
@@ -184,18 +180,15 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicStatus(epic.getId());
     }
 
-
     @Override
     public void removeAllSimpleTasks() {
         simpleTasks.clear();
     }
 
-
     @Override
     public void removeAllSubtasks() {
         subtasks.clear();
     }
-
 
     @Override
     public void removeAllEpics() {
@@ -203,14 +196,12 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.clear();
     }
 
-
     @Override
     public void removeAll() {
         simpleTasks.clear();
         subtasks.clear();
         epics.clear();
     }
-
 
     @Override
     public void remove(Long id) {
@@ -225,7 +216,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-
     @Override
     public List<Subtask> getSubtaskListByEpicID(Long id) {
         List<Subtask> currentList = new ArrayList<>();
@@ -235,20 +225,17 @@ public class InMemoryTaskManager implements TaskManager {
         return currentList;
     }
 
-
     @Override
     public SimpleTask getTaskByID(Long id) {
         historyManager.add(simpleTasks.get(id));
         return simpleTasks.get(id);
     }
 
-
     @Override
     public Subtask getSubtaskByID(Long id) {
         historyManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
-
 
     @Override
     public Epic getEpicByID(Long id) {
@@ -260,7 +247,6 @@ public class InMemoryTaskManager implements TaskManager {
     public Long getNextID() {
         return nextID;
     }
-
 
     @Override
     public void setNextID(Long nextID) {

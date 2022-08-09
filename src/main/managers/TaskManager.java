@@ -7,28 +7,6 @@ import main.tasks.Subtask;
 import java.util.*;
 
 public interface TaskManager {
-
-    /**
-     * Обновляем статус эпика, в зависимости от статусов его сабтасков
-     *
-     * @param epicID айдишник эпика, статус которого обновляем
-     */
-    void updateEpicStatus(Long epicID);
-
-    /**
-     * Удаляем сабтаск и актуализируем статус эпика
-     *
-     * @param id айдишник сабтаска, которого удаляем
-     */
-    void removeSubtask(Long id);
-
-    /**
-     * Удаляем эпик со всеми его сабтасками
-     *
-     * @param id айдишник эпика, который удаляем
-     */
-    void removeEpic(Long id);
-
     /**
      * Обновление списка айдишников сабтасков в эпике
      *
@@ -174,5 +152,4 @@ public interface TaskManager {
      * Выбираем с какого номера будут выдаваться уникальные ID
      */
     void setNextID(Long nextID);
-
 }

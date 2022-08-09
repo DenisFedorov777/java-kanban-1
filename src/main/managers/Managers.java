@@ -8,9 +8,8 @@ import java.util.List;
  * Подбирает нужную реализацию TaskManager и возвращает объект правильного типа
  */
 public class Managers {
-
     TaskManager taskManager = new InMemoryTaskManager();
-    static HistoryManager historyManager = new InMemoryHistoryManager();
+    HistoryManager historyManager = new InMemoryHistoryManager();
 
     /**
      * @return объект-менеджер
@@ -22,7 +21,7 @@ public class Managers {
     /**
      * @return объект "InMemoryHistoryManager" — историю просмотров
      */
-    public static List<Task> getDefaultHistory() {
+    public List<Task> getDefaultHistory() {
         return historyManager.getHistory();
     }
 }
