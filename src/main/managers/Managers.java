@@ -8,13 +8,11 @@ import java.util.List;
  * Подбирает нужную реализацию TaskManager и возвращает объект правильного типа
  */
 public class Managers {
-    TaskManager taskManager = new InMemoryTaskManager();
-
     /**
      * @return объект-менеджер
      */
     public TaskManager getDefault() {
-        return taskManager;
+        return new InMemoryTaskManager();
     }
 
     /**
