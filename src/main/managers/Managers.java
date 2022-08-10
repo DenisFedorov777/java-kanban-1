@@ -9,7 +9,6 @@ import java.util.List;
  */
 public class Managers {
     TaskManager taskManager = new InMemoryTaskManager();
-    HistoryManager historyManager = new InMemoryHistoryManager();
 
     /**
      * @return объект-менеджер
@@ -21,7 +20,8 @@ public class Managers {
     /**
      * @return объект "InMemoryHistoryManager" — историю просмотров
      */
-    public List<Task> getDefaultHistory() {
+    public static List<Task> getDefaultHistory() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
         return historyManager.getHistory();
     }
 }
