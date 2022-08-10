@@ -15,7 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Long, SimpleTask> simpleTasks;
     private final Map<Long, Subtask> subtasks;
     private final Map<Long, Epic> epics;
-    InMemoryHistoryManager historyManager;
+    private final InMemoryHistoryManager historyManager;
 
     public InMemoryTaskManager() {
         this.nextID = nextID = 1L;

@@ -19,7 +19,6 @@ public class Managers {
      * @return объект "InMemoryHistoryManager" — историю просмотров
      */
     public static List<Task> getDefaultHistory() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
-        return historyManager.getHistory();
+        return new InMemoryHistoryManager().getHistory();
     }
 }
